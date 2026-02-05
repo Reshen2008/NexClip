@@ -185,14 +185,14 @@ const fetchVideos = async (query = activeCategory, isNextPage = false) => {
   <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} 
        onClick={() => {setSearchTerm(''); fetchVideos(); setSelectedVideo(null); setCurrentPage('home');}}>
     <img src={logo} alt="NexClip Logo" style={{ width: '45px', height: '45px', borderRadius: '10px', objectFit: 'cover' }} />
-    <h1 style={{ color: '#ff0000', margin: 0, fontSize: 'clamp(22px, 5vw, 30px)', fontWeight: '900' }}>
+    <h1 style={{ color: '#ff0000', margin: 0, fontSize: 'clamp(20px, 5vw, 26px)', fontWeight: '700' }}>
       NexClip
     </h1>
   </div>
 
   <div style={{ display: 'flex', gap: '8px', padding: '5px 12px', borderRadius: '20px', background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
     {['home', 'about', 'privacy'].map((page) => (
-      <span key={page} onClick={() => setCurrentPage(page)} style={{ cursor: 'pointer', fontSize: '11px', fontWeight: '600', textTransform: 'capitalize', color: currentPage === page ? '#ff0000' : 'rgba(255,255,255,0.8)' }}>
+      <span key={page} onClick={() => setCurrentPage(page)} style={{ cursor: 'pointer', fontSize: '11px', fontWeight: '400', textTransform: 'capitalize', color: currentPage === page ? '#ff0000' : 'rgba(255,255,255,0.8)' }}>
         {page}
       </span>
     ))}
@@ -283,7 +283,7 @@ const fetchVideos = async (query = activeCategory, isNextPage = false) => {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px', flexWrap: 'wrap', gap: '15px' }}>
               <div>
-                <h2 style={{ margin: 0, fontSize: '20px' }}>Shot by {selectedVideo.user.name}</h2>
+                <h2 style={{ margin: 0, fontSize: '20px', fontWeight: '600' }}>Shot by {selectedVideo.user.name}</h2>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '5px' }}>
                   {/* --- 4K ULTRA HD TAG --- */}
                   <span style={{ 
@@ -291,6 +291,7 @@ const fetchVideos = async (query = activeCategory, isNextPage = false) => {
                     color: 'white', 
                     fontSize: '10px', 
                     fontWeight: 'bold', 
+                    fontWeight: '600',
                     padding: '3px 8px', 
                     borderRadius: '5px',
                     letterSpacing: '0.5px'
@@ -309,6 +310,7 @@ const fetchVideos = async (query = activeCategory, isNextPage = false) => {
      padding: '12px 30px', 
      borderRadius: '40px', 
      fontWeight: 'bold',
+     fontWeight: '600',
      display: 'flex',       // Icon එකයි Text එකයි එක ලයින් එකේ තියන්න
      alignItems: 'center',  // මැදට ගන්න
      gap: '10px',           // Icon එකයි Text එකයි අතර පරතරය
@@ -326,7 +328,7 @@ const fetchVideos = async (query = activeCategory, isNextPage = false) => {
 
 {/* --- RIGHT SIDE: RELATED CLIPS --- */}
 <div style={{ flex: '1', minWidth: '300px' }}>
-  <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+  <h3 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: '600' }}>
     <div style={{ width: '4px', height: '20px', background: '#ff0000', borderRadius: '10px' }}></div>
     Related Clips
   </h3>
@@ -351,7 +353,7 @@ const fetchVideos = async (query = activeCategory, isNextPage = false) => {
           <img src={v.image} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: '0.3s' }} alt="t" />
         </div>
         <div style={{ overflow: 'hidden', flex: 1 }}>
-          <h5 style={{ margin: 0, fontSize: '13px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{v.user.name}</h5>
+          <h5 style={{ margin: 0, fontSize: '13px', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{v.user.name}</h5>
           <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: 'rgba(255,255,255,0.4)' }}>Premium Content</p>
         </div>
       </div>
@@ -411,7 +413,7 @@ const fetchVideos = async (query = activeCategory, isNextPage = false) => {
           />
         </div>
         <div style={{ padding: '15px 5px' }}>
-          <h4 style={{ margin: 0, fontSize: '16px' }}>{video.user.name}</h4>
+          <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>{video.user.name}</h4>
           <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '12px' }}>Premium Content</p>
         </div>
       </div>
@@ -441,7 +443,7 @@ const fetchVideos = async (query = activeCategory, isNextPage = false) => {
     ) : (
       <button 
         onClick={() => fetchVideos(activeCategory, true)}
-        style={{ ...glassStyle, padding: '15px 40px', borderRadius: '30px', color: 'white', cursor: 'pointer', fontWeight: 'bold', fontSize: '14px', border: '1px solid rgba(255,255,255,0.2)' }}
+        style={{ ...glassStyle, padding: '15px 40px', borderRadius: '30px', color: 'white', cursor: 'pointer', fontSize: '14px', border: '1px solid rgba(255,255,255,0.2)' }}
       >
         Load More Clips
       </button>
@@ -462,7 +464,7 @@ const fetchVideos = async (query = activeCategory, isNextPage = false) => {
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '30px' }}>
           <div style={{ flex: 1, minWidth: '250px' }}>
-            <h2 style={{ color: '#ff0000', fontWeight: '900', margin: '0 0 10px 0' }}>NexClip</h2>
+            <h2 style={{ color: '#ff0000', fontWeight: '600', margin: '0 0 10px 0' }}>NexClip</h2>
             <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.6)', lineHeight: '1.6' }}>
               Premium cinematic stock footage platform powered by Pexels API. High-quality clips for creators worldwide.
             </p>
