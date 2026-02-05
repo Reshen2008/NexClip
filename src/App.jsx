@@ -3,25 +3,57 @@ import axios from 'axios';
 import logo from './assets/appLogo.png';
 
 // --- AD COMPONENT ---
-const AdBanner = ({ label }) => (
-  <div style={{ 
-    width: '100%', 
-    height: '90px', 
-    background: 'rgba(255, 255, 255, 0.05)', 
-    backdropFilter: 'blur(10px)',
-    borderRadius: '15px', 
-    display: 'flex', 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    border: '1px dashed rgba(255, 255, 255, 0.2)',
-    margin: '20px 0',
-    color: 'rgba(255, 255, 255, 0.3)',
-    fontSize: '12px',
-    letterSpacing: '1px'
-  }}>
-    {label} - ADVERTISEMENT SPACE
-  </div>
-);
+const AdBanner = ({ label }) => {
+  const adRef = React.useRef(null);
+
+  React.useEffect(() => {
+    // Component එක load වෙද්දී කලින් ඇඩ් එකක් නැත්නම් විතරක් අලුත් එකක් හදනවා
+    if (adRef.current && !adRef.current.firstChild) {
+      const configScript = document.createElement('script');
+      const invokeScript = document.createElement('script');
+
+      configScript.type = 'text/javascript';
+      configScript.innerHTML = `
+        atOptions = {
+          'key' : 'b7e8b03fb50b30344e57cab86494616d',
+          'format' : 'iframe',
+          'height' : 90,
+          'width' : 728,
+          'params' : {}
+        };
+      `;
+
+      invokeScript.type = 'text/javascript';
+      invokeScript.src = `https://www.highperformanceformat.com/b7e8b03fb50b30344e57cab86494616d/invoke.js`;
+
+      adRef.current.appendChild(configScript);
+      adRef.current.appendChild(invokeScript);
+    }
+  }, []);
+
+  return (
+    <div style={{ 
+      width: '100%', 
+      minHeight: '90px', 
+      background: 'rgba(255, 255, 255, 0.05)', 
+      backdropFilter: 'blur(10px)',
+      borderRadius: '15px', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+      margin: '20px 0',
+      overflow: 'hidden'
+    }} ref={adRef}>
+      {/* ඇඩ් එක ලෝඩ් වෙනකම් පෙනෙන ලේබල් එක */}
+      {!adRef.current?.firstChild && (
+        <span style={{ color: 'rgba(255, 255, 255, 0.2)', fontSize: '12px' }}>
+          {label} Loading Ad...
+        </span>
+      )}
+    </div>
+  );
+};
 
 function App() {
   const [videos, setVideos] = useState([]);
