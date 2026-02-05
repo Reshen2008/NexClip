@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import logo from './assets/appLogo.png';
 
 // --- AD COMPONENT ---
 const AdBanner = ({ label }) => (
@@ -146,20 +147,25 @@ const fetchVideos = async (query = activeCategory, isNextPage = false) => {
         width: '92%',
         borderRadius: '25px',
       }}>
-        <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
-          <h1 style={{ color: '#ff0000', margin: 0, cursor: 'pointer', fontSize: 'clamp(22px, 5vw, 30px)', fontWeight: '900' }} 
-              onClick={() => {setSearchTerm(''); fetchVideos(); setSelectedVideo(null); setCurrentPage('home');}}>
-            NexClip
-          </h1>
+<div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px' }}>
+  
+  {/* ලෝගෝ එක සහ නම එක ළඟට ගන්න මෙන්න මේ div එක පාවිච්චි කරන්න */}
+  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} 
+       onClick={() => {setSearchTerm(''); fetchVideos(); setSelectedVideo(null); setCurrentPage('home');}}>
+    <img src={logo} alt="NexClip Logo" style={{ width: '45px', height: '45px', borderRadius: '10px', objectFit: 'cover' }} />
+    <h1 style={{ color: '#ff0000', margin: 0, fontSize: 'clamp(22px, 5vw, 30px)', fontWeight: '900' }}>
+      NexClip
+    </h1>
+  </div>
 
-          <div style={{ display: 'flex', gap: '8px', padding: '5px 12px', borderRadius: '20px', background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
-            {['home', 'about', 'privacy'].map((page) => (
-              <span key={page} onClick={() => setCurrentPage(page)} style={{ cursor: 'pointer', fontSize: '11px', fontWeight: '600', textTransform: 'capitalize', color: currentPage === page ? '#ff0000' : 'rgba(255,255,255,0.8)' }}>
-                {page}
-              </span>
-            ))}
-          </div>
-        </div>
+  <div style={{ display: 'flex', gap: '8px', padding: '5px 12px', borderRadius: '20px', background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.15)' }}>
+    {['home', 'about', 'privacy'].map((page) => (
+      <span key={page} onClick={() => setCurrentPage(page)} style={{ cursor: 'pointer', fontSize: '11px', fontWeight: '600', textTransform: 'capitalize', color: currentPage === page ? '#ff0000' : 'rgba(255,255,255,0.8)' }}>
+        {page}
+      </span>
+    ))}
+  </div>
+</div>
 
         <div style={{ width: '100%', maxWidth: '600px', position: 'relative' }}>
           <form onSubmit={(e) => { e.preventDefault(); setActiveCategory(searchTerm); fetchVideos(searchTerm); setShowSuggestions(false); setSelectedVideo(null); setCurrentPage('home'); }} style={{ display: 'flex', alignItems: 'center' }}>
