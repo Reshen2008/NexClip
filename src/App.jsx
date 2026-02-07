@@ -1,56 +1,67 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import logo from './assets/appLogo.png';
-
-// --- AD COMPONENT ---
-const AdBanner = ({ label }) => {
+const AdBanner = ({ label, adKey = 'b7e8b03fb50b30344e57cab86494616d', isNative = false, index = 0 }) => {
   const adRef = React.useRef(null);
+  const [refresh, setRefresh] = React.useState(0);
+  const uniqueId = `container-${adKey}-${index}`;
 
   React.useEffect(() => {
-    // Component එක load වෙද්දී කලින් ඇඩ් එකක් නැත්නම් විතරක් අලුත් එකක් හදනවා
-    if (adRef.current && !adRef.current.firstChild) {
-      const configScript = document.createElement('script');
-      const invokeScript = document.createElement('script');
+    const interval = setInterval(() => {
+      setRefresh(prev => prev + 1);
+    }, 60000); 
 
-      configScript.type = 'text/javascript';
-      configScript.innerHTML = `
-        atOptions = {
-          'key' : 'b7e8b03fb50b30344e57cab86494616d',
-          'format' : 'iframe',
-          'height' : 90,
-          'width' : 728,
-          'params' : {}
-        };
-      `;
+    if (adRef.current) {
+      adRef.current.innerHTML = ''; 
 
-      invokeScript.type = 'text/javascript';
-      invokeScript.src = `https://www.highperformanceformat.com/b7e8b03fb50b30344e57cab86494616d/invoke.js`;
-
-      adRef.current.appendChild(configScript);
-      adRef.current.appendChild(invokeScript);
+      if (isNative) {
+        const nativeDiv = document.createElement('div');
+        nativeDiv.id = uniqueId;
+        const nativeScript = document.createElement('script');
+        nativeScript.type = 'text/javascript';
+        nativeScript.async = true;
+        nativeScript.src = `//www.highperformanceformat.com/${adKey}/invoke.js`;
+        adRef.current.appendChild(nativeDiv);
+        adRef.current.appendChild(nativeScript);
+      } else {
+        const atOptions = document.createElement('script');
+        atOptions.type = 'text/javascript';
+        atOptions.innerHTML = `atOptions = { 'key' : '${adKey}', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };`;
+        const invokeScript = document.createElement('script');
+        invokeScript.type = 'text/javascript';
+        invokeScript.src = `//www.highperformanceformat.com/${adKey}/invoke.js`;
+        adRef.current.appendChild(atOptions);
+        adRef.current.appendChild(invokeScript);
+      }
     }
-  }, []);
+    return () => clearInterval(interval);
+  }, [adKey, refresh, isNative, uniqueId]);
 
   return (
     <div style={{ 
       width: '100%', 
-      minHeight: '90px', 
-      background: 'rgba(255, 255, 255, 0.05)', 
-      backdropFilter: 'blur(10px)',
+      minHeight: isNative ? '150px' : '90px', 
+      background: 'rgba(255, 255, 255, 0.05)', // ඉතා අඩු opacity එකක්
+      backdropFilter: 'blur(12px)', // පසුබිම blur කරන කොටස
+      WebkitBackdropFilter: 'blur(12px)', // Safari support එක සඳහා
       borderRadius: '15px', 
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center', 
-      border: '1px solid rgba(255, 255, 255, 0.1)',
+      border: '1px solid rgba(255, 255, 255, 0.1)', 
       margin: '20px 0',
-      overflow: 'hidden'
-    }} ref={adRef}>
-      {/* ඇඩ් එක ලෝඩ් වෙනකම් පෙනෙන ලේබල් එක */}
-      {!adRef.current?.firstChild && (
-        <span style={{ color: 'rgba(255, 255, 255, 0.2)', fontSize: '12px' }}>
-          {label} Loading Ad...
-        </span>
-      )}
+      overflow: 'hidden',
+      position: 'relative'
+    }}>
+      <span style={{ 
+        position: 'absolute', 
+        color: 'rgba(255, 255, 255, 0.2)', 
+        fontSize: '12px',
+        zIndex: 0
+      }}>
+        Loading Ad...
+      </span>
+      <div ref={adRef} style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'center', width: '100%' }}></div>
     </div>
   );
 };
@@ -418,11 +429,17 @@ const fetchVideos = async (query = activeCategory, isNextPage = false) => {
         </div>
       </div>
 
-      {(index + 1) % 6 === 0 && (
-        <div style={{ gridColumn: '1 / -1' }}>
-           <AdBanner label="In-Feed Mid Ad" />
-        </div>
-      )}
+{/* index එක 5 වෙන්නේ 6 වෙනි වීඩියෝ එකේදී. එතනට විතරක් banner එකක් වැටෙනවා */}
+{(index + 1) === 6 && (
+  <div style={{ gridColumn: '1 / -1', width: '100%' }}>
+    <AdBanner 
+      label="In-Feed Banner Ad" 
+      adKey="b7e8b03fb50b30344e57cab86494616d" // ඔයාගේ Standard Banner Key එක
+      isNative={false} 
+      index={index} 
+    />
+  </div>
+)}
     </React.Fragment>
   ))}
 </div>
