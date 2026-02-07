@@ -1,49 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import logo from './assets/appLogo.png';
-const AdBanner = ({ label, adKey = 'b7e8b03fb50b30344e57cab86494616d', isNative = false, index = 0 }) => {
+
+const AdBanner = ({ label, adKey = 'b7e8b03fb50b30344e57cab86494616d', isNative = false }) => {
   const adRef = React.useRef(null);
-  const [refresh, setRefresh] = React.useState(0);
-  const uniqueId = `container-${adKey}-${index}`;
 
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      setRefresh(prev => prev + 1);
-    }, 60000); 
-
     if (adRef.current) {
       adRef.current.innerHTML = ''; 
 
       if (isNative) {
+        // --- NATIVE BANNER LOGIC ---
         const nativeDiv = document.createElement('div');
-        nativeDiv.id = uniqueId;
+        nativeDiv.id = `container-${adKey}`;
+        
         const nativeScript = document.createElement('script');
         nativeScript.type = 'text/javascript';
         nativeScript.async = true;
         nativeScript.src = `//www.highperformanceformat.com/${adKey}/invoke.js`;
+
         adRef.current.appendChild(nativeDiv);
         adRef.current.appendChild(nativeScript);
       } else {
+        // --- STANDARD IFRAME BANNER LOGIC ---
         const atOptions = document.createElement('script');
         atOptions.type = 'text/javascript';
         atOptions.innerHTML = `atOptions = { 'key' : '${adKey}', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };`;
+
         const invokeScript = document.createElement('script');
         invokeScript.type = 'text/javascript';
         invokeScript.src = `//www.highperformanceformat.com/${adKey}/invoke.js`;
+
         adRef.current.appendChild(atOptions);
         adRef.current.appendChild(invokeScript);
       }
     }
-    return () => clearInterval(interval);
-  }, [adKey, refresh, isNative, uniqueId]);
+  }, [adKey, isNative]); // refresh dependency එක මෙතනින් අයින් කළා
 
   return (
     <div style={{ 
       width: '100%', 
-      minHeight: isNative ? '150px' : '90px', 
-      background: 'rgba(255, 255, 255, 0.05)', // ඉතා අඩු opacity එකක්
-      backdropFilter: 'blur(12px)', // පසුබිම blur කරන කොටස
-      WebkitBackdropFilter: 'blur(12px)', // Safari support එක සඳහා
+      minHeight: isNative ? '160px' : '110px', 
+      background: 'rgba(255, 255, 255, 0.05)', 
+      backdropFilter: 'blur(12px)', // Background Blur එක
+      WebkitBackdropFilter: 'blur(12px)',
       borderRadius: '15px', 
       display: 'flex', 
       alignItems: 'center', 
@@ -59,9 +59,9 @@ const AdBanner = ({ label, adKey = 'b7e8b03fb50b30344e57cab86494616d', isNative 
         fontSize: '12px',
         zIndex: 0
       }}>
-        Loading Ad...
+        {label} Loading...
       </span>
-      <div ref={adRef} style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'center', width: '100%' }}></div>
+      <div ref={adRef} style={{ position: 'relative', zIndex: 1 }}></div>
     </div>
   );
 };
@@ -272,7 +272,8 @@ const fetchVideos = async (query = activeCategory, isNextPage = false) => {
               <div style={{ ...glassStyle, padding: '40px', borderRadius: '30px', maxWidth: '800px', margin: '40px auto', lineHeight: '1.6', fontSize: '14px' }}>
                 <h2 style={{ color: '#ff3b19' }}>Privacy Policy</h2>
                 <p>At NexClip, we value your privacy. We do not collect personal data from our users unless explicitly provided. Our search results and video content are provided by the Pexels API.</p>
-                <AdBanner label="Privacy Page Ad" />
+                {/* උඩම තියෙන Banner එක */}
+<AdBanner label="Sponsored Content Ad" adKey="b7e8b03fb50b30344e57cab86494616d" isNative={false} />
                 <button onClick={() => setCurrentPage('home')} style={{ background: '#ff3b19', border: 'none', color: 'white', padding: '10px 25px', borderRadius: '20px', cursor: 'pointer', marginTop: '20px', fontWeight: 'bold' }}>Back to Explore</button>
               </div>
             )}
@@ -290,7 +291,8 @@ const fetchVideos = async (query = activeCategory, isNextPage = false) => {
               <video controls autoPlay src={selectedVideo.video_files[0].link} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
 
-            <AdBanner label="Video Player Ad" />
+            {/* උඩම තියෙන Banner එක */}
+<AdBanner label="Sponsored Content Ad" adKey="b7e8b03fb50b30344e57cab86494616d" isNative={false} />
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px', flexWrap: 'wrap', gap: '15px' }}>
               <div>
@@ -388,8 +390,8 @@ const fetchVideos = async (query = activeCategory, isNextPage = false) => {
                       ))}
                     </div>
                     <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                      <AdBanner label="Home Grid Top Ad" />
-                    </div>
+                      {/* උඩම තියෙන Banner එක */}
+<AdBanner label="Sponsored Content Ad" adKey="b7e8b03fb50b30344e57cab86494616d" isNative={false} />                    </div>
                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '25px', width: '100%' }}>
   {videos.map((video, index) => (
     <React.Fragment key={video.id}>
@@ -429,14 +431,13 @@ const fetchVideos = async (query = activeCategory, isNextPage = false) => {
         </div>
       </div>
 
-{/* index එක 5 වෙන්නේ 6 වෙනි වීඩියෝ එකේදී. එතනට විතරක් banner එකක් වැටෙනවා */}
+{/* Grid එක ඇතුළේ 6 වෙනි වීඩියෝ එකට විතරක් Native Ad එක */}
 {(index + 1) === 6 && (
-  <div style={{ gridColumn: '1 / -1', width: '100%' }}>
+  <div style={{ gridColumn: '1 / -1' }}>
     <AdBanner 
-      label="In-Feed Banner Ad" 
-      adKey="b7e8b03fb50b30344e57cab86494616d" // ඔයාගේ Standard Banner Key එක
-      isNative={false} 
-      index={index} 
+      label="Sponsored Content Ad" 
+      adKey="9143c4a7e542e4a6142fdd177f9c1927" // ඔයාගේ Native Key එක
+      isNative={true} 
     />
   </div>
 )}
